@@ -1,5 +1,9 @@
 #!/usr/bin/perl
+use strict;
 use common::sense;
+# ABSTRACT: vou fazer depois
+# PODNAME: idem
+# VERSION
 
 =for comment
 
@@ -93,11 +97,11 @@ app->start;
 
 __DATA__
 @@ index.html.ep
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"> 
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
     <head>
         <title></title>
-        <%= tag 'link', rel => "alternate", type => "application/rss+xml", title => "Feed de ticket $num", href => "${root}feed/${feed}" if $feed %> 
+        <%= tag 'link', rel => "alternate", type => "application/rss+xml", title => "Feed de ticket $num", href => "${root}feed/${feed}" if $feed %>
         <!-- %= javascript 'http://cdn.jquerytools.org/1.2.5/full/jquery.tools.min.js' % -->
         <%= stylesheet begin %>
             body {

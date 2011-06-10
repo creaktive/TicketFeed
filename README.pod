@@ -1,0 +1,32 @@
+=pod
+
+=encoding utf8
+
+=head1 NAME
+
+idem - vou fazer depois
+
+=head1 VERSION
+
+version 0.1
+
+=begin comment
+
+
+
+
+=end comment
+
+Instruções para deploy: https://github.com/kraih/mojo/wiki/Dreamhost
+
+=head1 AUTHOR
+
+Stanislaw Pusep <stas@sysd.org>
+
+=head1 COPYRIGHT AND LICENSE
+
+This software is copyright (c) 2011 by Stanislaw Pusep.
+
+This is free software; you can redistribute it and/or modify it under
+the same terms as the Perl 5 programming language system itself.
+
