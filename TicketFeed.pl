@@ -112,7 +112,7 @@ __DATA__
         <% end %>
 
         <div>
-            <%= link to GitHub => 'https://github.com/creaktive/TicketFeed' %>
+            <%= link_to GitHub => 'https://github.com/creaktive/TicketFeed' %>
         </div>
     </body>
 </html>
