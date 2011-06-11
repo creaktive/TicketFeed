@@ -67,11 +67,12 @@ any '/feed/:num' => [num => qr/(\d{4}-?){4}/] => sub {
             my $date    = sprintf('%04d-%02d-%02dT12:00:00Z', $year, $month, $day);
             $feed->add_entry(
                 author      => $numstr,
-                content     => "<span style='color: $color'>" . $price->format_price($item->{valor}, 2) . "</span>",
+                content     => "<span style='color: $color'>" . $price->format_price($item->{valor}, 2) . "</span> (" . $item->{valor} . ")",
                 id          => Data::UUID->new->create_from_name_str('ticket.com.br' => $num . $date),
                 link        => $link,
                 published   => $date,
                 title       => $item->{descricao},
+                updated     => $date,
             );
         }
     }
@@ -102,11 +103,16 @@ __DATA__
 
     <body>
         <h1>Gerador de feed para Ticket</h1>
+
         <%= form_for $root => (method => 'post') => begin %>
             Número do Ticket: <%= text_field 'num' %>
             <%= submit_button 'gerar' %>
             <br/>
             <%= text_field 'feed' => "${root}feed/${feed}", size => 50 if $feed %>
         <% end %>
+
+        <div>
+            <%= link to GitHub => 'https://github.com/creaktive/TicketFeed' %>
+        </div>
     </body>
 </html>
