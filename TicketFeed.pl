@@ -67,7 +67,7 @@ any '/feed/:num' => [num => qr/(\d{4}-?){4}/] => sub {
             my $date    = sprintf('%04d-%02d-%02dT12:00:00Z', $year, $month, $day);
             $feed->add_entry(
                 author      => $numstr,
-                content     => "<span style='color: $color'>" . $price->format_price($item->{valor}, 2) . "</span> (" . $item->{valor} . ")",
+                content     => "<span style='color: $color'>" . $price->format_price($item->{valor}, 2) . "</span> (" . $item->{data} . ")",
                 id          => Data::UUID->new->create_from_name_str('ticket.com.br' => $num . $date),
                 link        => $link,
                 published   => $date,
