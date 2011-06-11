@@ -1,0 +1,99 @@
+* {
+    margin: 0;
+    padding: 0;
+}
+
+html, body {
+    text-shadow: 0 1px 0 #fff;
+    font-family: sans-serif;
+    height: 100%;
+}
+
+body {
+    /* centralização vertical "emprestada" de: http://d-graff.de/fricca/center.html */
+    text-align: center;
+}
+
+#distance { 
+    width: 1px;
+    height: 50%;
+    margin-bottom: -15em; /* half of container's height */
+    float: left;
+}
+
+#card {
+    margin: 0 auto;
+    position: relative; /* puts container in front of distance */
+    clear: left;
+    text-align: left;
+    padding: 2em;
+
+    /* dimensões */
+    width: 33.70em;
+    height: 21.25em;
+
+    /* fundo */
+    background: -webkit-gradient(linear, left top, left bottom, from(#eee), to(#bbb)); 
+
+    /* bordas */
+    border: 0;
+    -moz-border-radius-topleft: 1em;
+    -moz-border-radius-topright: 2em;
+    -moz-border-radius-bottomleft: 2em;
+    -moz-border-radius-bottomright: 2em;
+    -webkit-border-top-left-radius: 2em;
+    -webkit-border-top-right-radius: 2em;
+    -webkit-border-bottom-left-radius: 2em;
+    -webkit-border-bottom-right-radius: 2em;
+    border-top-left-radius: 2em;
+    border-top-right-radius: 2em;
+    border-bottom-left-radius: 2em;
+    border-bottom-right-radius: 2em;
+
+    /* sombra */
+    -moz-box-shadow: 0.5em 0.5em 1em #888;
+    -webkit-box-shadow: 0.5em 0.5em 1em #888;
+    box-shadow: 0.5em 0.5em 1em #888;
+}
+
+#card legend {
+    font-size: 3em;
+    font-style: italic;
+    font-weight: bold;
+    position: relative;
+    top: 1em;
+    color: #006;
+}
+
+#slogan {
+    font-size: 1.25em;
+    margin: 1.25em;
+}
+
+#num {
+    background: transparent;
+    border: 0;
+    color: #888;
+    font-family: monospace;
+    font-size: 3.25em;
+    font-weight: bold;
+    outline: none;
+    text-shadow: #fff 0px 1px 0, #000 0 -1px 0;
+}
+
+#result {
+    text-align: center;
+}
+
+#result input {
+    font-size: 1em;
+    line-height: 1em;
+    width: 28em;
+}
+
+#footer {
+    bottom: 2em;
+    font-size: 0.75em;
+    position: absolute;
+    right: 2em;
+}

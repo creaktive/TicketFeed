@@ -1,0 +1,72 @@
+<!doctype html>
+<html lang="pt-BR">
+    <head>
+        <meta charset="utf-8">
+        <title>Gerador de feed para Ticket</title>
+
+        <link href="feed-icon-14x14.png" rel="icon" type="image/png" />
+
+        <%= tag 'link', rel => "alternate", type => "application/rss+xml", title => "Feed de ticket $num", href => "${root}feed/${feed}" if $feed %> 
+
+        <%= stylesheet 'style.css' %>
+
+        <!-- %= javascript 'http://cdn.jquerytools.org/1.2.5/full/jquery.tools.min.js' % -->
+        <%= javascript begin %>
+            var _gaq = _gaq || [];
+            _gaq.push(['_setAccount', 'UA-23911146-1']);
+            _gaq.push(['_setDomainName', 'none']);
+            _gaq.push(['_trackPageview']);
+
+            (function() {
+                var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+                ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+                var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+            })();
+        <% end %>
+    </head>
+
+    <body>
+        <div id="distance"></div>
+        <%= form_for $root => (method => 'post') => begin %>
+            <fieldset id="card">
+                <legend>TicketFeed</legend>
+
+                <div id="slogan">
+                        Alimentando o seu leitor de <i>feeds</i>!
+                </div>
+
+                <label for="num">Digite o número do seu Ticket:</label>
+                <br/>
+                <%=
+                    text_field
+                        num         => $num,
+                        id          => 'num',
+                        placeholder => '0000-0000-0000-0000',
+                        pattern     => '^(\d{4}-?){4}$',
+                        required    => 'required',
+                        size        => 19,
+                        maxlength   => 19
+                %>
+
+                <% if ($feed) { %>
+                    <div style="margin-top: 1em;">
+                        Adicione ao seu leitor de <i>feeds</i>:
+                    </div>
+                    <div id="result">
+                        <%= text_field 'feed' => "${root}feed/${feed}", id => 'feed', onclick => 'this.select()' %>
+                        <%= link_to "${root}feed/${feed}" => begin %>
+                            <%= image 'feed-icon-28x28.png', alt => 'Feed Atom', style => 'vertical-align: middle;' %>
+                        <% end %>
+                    </div>
+                <% } %>
+
+                <div id="footer">
+                    Desenvolvido por
+                    <%= link_to 'Stanislaw Pusep' => 'http://sysd.org/' %>
+                    , o código-fonte encontra-se disponível no
+                    <%= link_to GitHub => 'https://github.com/creaktive/TicketFeed' %>
+                </div>
+            </fieldset>
+        <% end %>
+    </body>
+</html>
