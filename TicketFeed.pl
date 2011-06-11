@@ -1,6 +1,12 @@
 #!/usr/bin/env perl
 use common::sense;
 
+=head1 TODO
+
+ ticket.iwatcher.net. IN CNAME gateway.dotcloud.com.
+
+=cut
+
 use Business::CreditCard;
 use Data::UUID;
 use Mojolicious::Lite;
@@ -105,6 +111,7 @@ __DATA__
         <%= javascript begin %>
             var _gaq = _gaq || [];
             _gaq.push(['_setAccount', 'UA-23911146-1']);
+            _gaq.push(['_setDomainName', 'none']);
             _gaq.push(['_trackPageview']);
 
             (function() {
