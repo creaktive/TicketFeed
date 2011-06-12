@@ -4,9 +4,10 @@
 }
 
 html, body {
-    text-shadow: 0 1px 0 #fff;
     font-family: sans-serif;
     height: 100%;
+    line-height: 2em;
+    text-shadow: 0 1px 0 #fff;
 }
 
 body {
@@ -67,7 +68,7 @@ body {
 
 #slogan {
     font-size: 1.25em;
-    margin: 1.25em;
+    margin: 1em;
 }
 
 #num {
@@ -78,7 +79,7 @@ body {
     font-size: 3.25em;
     font-weight: bold;
     outline: none;
-    text-shadow: #fff 0px 1px 0, #000 0 -1px 0;
+    text-shadow: #000 0px 1px 0, #fff 0 -1px 0;
 }
 
 #result {
@@ -87,7 +88,6 @@ body {
 
 #result input {
     font-size: 1em;
-    line-height: 1em;
     width: 28em;
 }
 

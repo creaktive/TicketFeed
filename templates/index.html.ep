@@ -2,7 +2,7 @@
 <html lang="pt-BR">
     <head>
         <meta charset="utf-8">
-        <title>Gerador de feed para Ticket</title>
+        <title>TicketFeed</title>
 
         <link href="feed-icon-14x14.png" rel="icon" type="image/png" />
 
@@ -49,9 +49,9 @@
                 %>
 
                 <% if ($feed) { %>
-                    <div style="margin-top: 1em;">
-                        Adicione ao seu leitor de <i>feeds</i>:
-                    </div>
+                    <object id="balance" type="image/svg+xml" data="<%= "${root}balance/${feed}" %>" width="300" height="20"></object>
+                    <br/>
+                    Adicione ao seu leitor de <i>feeds</i>:
                     <div id="result">
                         <%= text_field 'feed' => "${root}feed/${feed}", id => 'feed', onclick => 'this.select()' %>
                         <%= link_to "${root}feed/${feed}" => begin %>

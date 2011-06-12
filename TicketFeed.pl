@@ -1,5 +1,6 @@
 #!/usr/bin/env perl
 use common::sense;
+use strict;
 
 =head1 TODO
 
@@ -37,6 +38,32 @@ any '/' => sub {
     $self->render('index');
 };
 
+any '/balance/:num' => [num => qr/(\d{4}-?){4}/] => sub {
+    my ($self) = @_;
+
+    my $num = $self->param('num');
+    $num =~ s/\D//g;
+    return $self->redirect_to('/') unless validate($num);
+
+    local $_ = $self->ua->
+        get('http://www.ticket.com.br/portal/portalcorporativo/dpages/service/consulteseusaldo/seeBalance.jsp?txtOperacao=saldo_agendamentos&txtNumeroCartao=' . $num)->
+        res->content->asset->slurp;
+
+    my $balance = '';
+    my $date    = '';
+    if (m{\bpreencherPainelSaldos\('(\d{1,2}/\d{1,2}/\d{4})'\s*,\s*'([\d\,\.]+)'}) {
+        $date = $1;
+        $balance = $2;
+        $balance =~ y/,././d;
+    }
+
+    $self->stash(
+        balance => $price->format_price($balance, 2),
+        date    => $date,
+    );
+    $self->render('balance', format => 'svg');
+};
+
 any '/feed/:num' => [num => qr/(\d{4}-?){4}/] => sub {
     my ($self) = @_;
 
@@ -64,6 +91,9 @@ any '/feed/:num' => [num => qr/(\d{4}-?){4}/] => sub {
     eval { $result = $json->decode("[$1]"); };
     return $self->redirect_to('/error') if $@ or ref($result->[2]) ne 'ARRAY';
 
+    my $balance_url = $self->req->url->to_abs;
+    $balance_url =~ s{/feed/}{/balance/};
+
     for my $item (@{$result->[2]}) {
         $item->{$_} //= '' for qw(data valor descricao);
         if (my ($day, $month, $year) = ($item->{data} =~ m{(\d{1,2})/(\d{1,2})/(\d{4})})) {
@@ -71,10 +101,18 @@ any '/feed/:num' => [num => qr/(\d{4}-?){4}/] => sub {
             my $color   = ($item->{descricao} =~ /^DISPON\.\s+DE\s+BENEFICIO/i) ? '#080' : '#800';
             my $link    = 'http://www.ticket.com.br/portal/portalcorporativo/usuario/vazio/consulte-seu-saldo/consulte-seu-saldo.htm?cardNumber=' . $num;
             my $date    = sprintf('%04d-%02d-%02dT12:00:00Z', $year, $month, $day);
+
+            my $id      = Data::UUID->new->create_from_name_str('ticket.com.br' => $num . $date);
+
+            my $content = "<span style='color: $color'>";
+            $content    .= $price->format_price($item->{valor}, 2);
+            $content    .= "</span> (" . $item->{data} . ")<br/>";
+            $content    .= qq{<object id="balance" type="image/svg+xml" data="$balance_url?id=$id" width="300" height="20"></object>};
+
             $feed->add_entry(
                 author      => $numstr,
-                content     => "<span style='color: $color'>" . $price->format_price($item->{valor}, 2) . "</span> (" . $item->{data} . ")",
-                id          => Data::UUID->new->create_from_name_str('ticket.com.br' => $num . $date),
+                content     => $content,
+                id          => $id,
                 link        => $link,
                 published   => $date,
                 title       => $item->{descricao},
@@ -90,4 +128,5 @@ any '*' => sub {
     shift->redirect_to('/');
 };
 
+app->secret($0);
 app->start;

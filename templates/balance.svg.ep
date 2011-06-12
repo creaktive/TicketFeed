@@ -1,0 +1,3 @@
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <text x="0" y="20" style="font-family: sans-serif; size: 18; text-shadow: 0 1px 0 #fff">Saldo em <%= $date %>: <%= $balance %></text>
+</svg>
