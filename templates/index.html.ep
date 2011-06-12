@@ -53,7 +53,7 @@
                     <br/>
                     Adicione ao seu leitor de <i>feeds</i>:
                     <div id="result">
-                        <%= text_field 'feed' => "${root}feed/${feed}", id => 'feed', onclick => 'this.select()' %>
+                        <%= text_field 'feed' => "${root}feed/${feed}", id => 'feed', onclick => 'this.select()', readonly => 'readonly' %>
                         <%= link_to "${root}feed/${feed}" => begin %>
                             <%= image 'feed-icon-28x28.png', alt => 'Feed Atom', style => 'vertical-align: middle;' %>
                         <% end %>
