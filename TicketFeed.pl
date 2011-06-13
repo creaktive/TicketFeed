@@ -75,7 +75,7 @@ any '/feed/:num' => [num => qr/(\d{4}-?){4}/] => sub {
     $numstr =~ s/(\d{4}\B)/$1-/g;
 
     my $feed = new XML::Atom::SimpleFeed(
-        title   => 'Saldo para ticket #' . $numstr,
+        title   => 'TicketFeed',
         id      => 'urn:uuid:' . Data::UUID->new->create_from_name_str('ticket.iwatcher.net' => 'ticket' . $num),
     );
 
@@ -107,10 +107,10 @@ any '/feed/:num' => [num => qr/(\d{4}-?){4}/] => sub {
             my $content = "<span style='color: $color'>";
             $content    .= $price->format_price($item->{valor}, 2);
             $content    .= "</span> (" . $item->{data} . ")<br/>";
-            $content    .= qq{<object id="balance" type="image/svg+xml" data="$balance_url?id=$id" width="300" height="20"></object>};
+            $content    .= qq{<iframe id="balance" name="balance" src="$balance_url?id=$id" width="300" height="20" frameborder="0" marginheight="0" marginwidth="0" scrolling="no" allowtransparency="true"></iframe>};
 
             $feed->add_entry(
-                author      => $numstr,
+                author      => 'Ticket #' . $numstr,
                 content     => $content,
                 id          => $id,
                 link        => $link,
