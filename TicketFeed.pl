@@ -121,7 +121,7 @@ any '/feed/:num' => [num => qr/(\d{4}-?){4}/] => sub {
             my $content = "<span style='color: $color'>";
             $content    .= $price->format_price($item->{valor}, 2);
             $content    .= "</span> (" . $item->{data} . ")<br/>";
-            $content    .= qq{<iframe id="balance" name="balance" src="$balance_url?id=$id" width="300" height="20" frameborder="0" marginheight="0" marginwidth="0" scrolling="no" allowtransparency="true"></iframe>};
+            $content    .= qq{<img src="$balance_url?id=$id" width="300" height="20" border="0" alt="" title=""/>};
 
             my $entry = new XML::Feed::Entry;
             $entry->author('noreply@' . $root->to_abs->host . " (TicketFeed #$numstr)");
