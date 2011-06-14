@@ -9,10 +9,10 @@ use strict;
 =cut
 
 use Business::CreditCard;
-use Data::UUID;
+use DateTime;
 use Mojolicious::Lite;
 use Number::Format;
-use XML::Atom::SimpleFeed;
+use XML::Feed;
 
 my $json = new Mojo::JSON;
 my $price = new Number::Format(
@@ -58,8 +58,8 @@ any '/balance/:num' => [num => qr/(\d{4}-?){4}/] => sub {
     }
 
     $self->stash(
-        balance => $price->format_price($balance, 2),
-        date    => $date,
+        balance     => $price->format_price($balance, 2),
+        date        => $date,
     );
     $self->render('balance', format => 'svg');
 };
@@ -74,10 +74,15 @@ any '/feed/:num' => [num => qr/(\d{4}-?){4}/] => sub {
     my $numstr = $num;
     $numstr =~ s/(\d{4}\B)/$1-/g;
 
-    my $feed = new XML::Atom::SimpleFeed(
-        title   => 'TicketFeed',
-        id      => 'urn:uuid:' . Data::UUID->new->create_from_name_str('ticket.iwatcher.net' => 'ticket' . $num),
-    );
+    my $root = $self->req->url->clone;
+    $root->path('/');
+
+    my $feed = new XML::Feed('RSS', version => '2.0');
+    $feed->description('Alimentando o seu leitor de feeds');
+    $feed->link($root->to_abs);
+    $feed->modified(DateTime->now);
+    $feed->self_link($self->req->url->to_abs);
+    $feed->title('TicketFeed');
 
     local $_ = $self->ua->
         get('http://www.ticket.com.br/portal/portalcorporativo/dpages/service/consulteseusaldo/seeBalance.jsp?txtOperation=lancamentos&txtCardNumber=' . $num)->
@@ -94,34 +99,44 @@ any '/feed/:num' => [num => qr/(\d{4}-?){4}/] => sub {
     my $balance_url = $self->req->url->to_abs;
     $balance_url =~ s{/feed/}{/balance/};
 
+    my $i = 0;
     for my $item (@{$result->[2]}) {
         $item->{$_} //= '' for qw(data valor descricao);
         if (my ($day, $month, $year) = ($item->{data} =~ m{(\d{1,2})/(\d{1,2})/(\d{4})})) {
             $item->{valor} =~ y/,././d;
             my $color   = ($item->{descricao} =~ /^DISPON\.\s+DE\s+BENEFICIO/i) ? '#080' : '#800';
             my $link    = 'http://www.ticket.com.br/portal/portalcorporativo/usuario/vazio/consulte-seu-saldo/consulte-seu-saldo.htm?cardNumber=' . $num;
-            my $date    = sprintf('%04d-%02d-%02dT12:00:00Z', $year, $month, $day);
 
-            my $id      = Data::UUID->new->create_from_name_str('ticket.com.br' => $num . $date);
+            my $date = new DateTime(
+                year        => $year,
+                month       => $month,
+                day         => $day,
+                hour        => 12,
+                minute      => 00,
+                second      => 00,
+                time_zone   => 'America/Sao_Paulo',
+            );
+            my $id = $date->epoch + $i;
 
             my $content = "<span style='color: $color'>";
             $content    .= $price->format_price($item->{valor}, 2);
             $content    .= "</span> (" . $item->{data} . ")<br/>";
             $content    .= qq{<iframe id="balance" name="balance" src="$balance_url?id=$id" width="300" height="20" frameborder="0" marginheight="0" marginwidth="0" scrolling="no" allowtransparency="true"></iframe>};
 
-            $feed->add_entry(
-                author      => 'Ticket #' . $numstr,
-                content     => $content,
-                id          => $id,
-                link        => $link,
-                published   => $date,
-                title       => $item->{descricao},
-                updated     => $date,
-            );
+            my $entry = new XML::Feed::Entry;
+            $entry->author('noreply@' . $root->to_abs->host . " (TicketFeed #$numstr)");
+            $entry->content($content);
+            $entry->link($link . '#' . $id);
+            $entry->modified($date);
+            $entry->summary($content);
+            $entry->title($item->{descricao});
+            $feed->add_entry($entry);
         }
+    } continue {
+        ++$i;
     }
 
-    $self->render(text => $feed->as_string, format => 'atom');
+    $self->render(text => $feed->as_xml, format => 'rss');
 };
 
 any '*' => sub {

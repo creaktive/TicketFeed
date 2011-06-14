@@ -8,9 +8,9 @@ WriteMakefile(
     PREREQ_PM => {
         'common::sense'         => 0,
         'Business::CreditCard'  => 0,
-        'Data::UUID'            => 0,
+        'DateTime'              => 0,
         'Mojolicious'           => 0,
         'Number::Format'        => 0,
-        'XML::Atom::SimpleFeed' => 0,
+        'XML::Feed'             => 0,
     },
 );
