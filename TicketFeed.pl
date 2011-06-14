@@ -2,12 +2,6 @@
 use common::sense;
 use strict;
 
-=head1 TODO
-
- ticket.iwatcher.net. IN CNAME gateway.dotcloud.com.
-
-=cut
-
 use Business::CreditCard;
 use DateTime;
 use Mojolicious::Lite;
