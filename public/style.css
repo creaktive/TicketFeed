@@ -4,10 +4,7 @@
 }
 
 html, body {
-    font-family: sans-serif;
     height: 100%;
-    line-height: 2em;
-    text-shadow: 0 1px 0 #fff;
 }
 
 body {
@@ -23,6 +20,11 @@ body {
 }
 
 #card {
+    /* fonte */
+    font-family: sans-serif;
+    line-height: 2em;
+    text-shadow: 0 1px 0 #fff;
+
     margin: 0 auto;
     position: relative; /* puts container in front of distance */
     clear: left;
@@ -35,6 +37,7 @@ body {
 
     /* fundo */
     background: -webkit-gradient(linear, left top, left bottom, from(#eee), to(#bbb)); 
+    background: -moz-linear-gradient(top,  #eee,  #bbb);
 
     /* bordas */
     border: 0;
@@ -88,7 +91,7 @@ body {
 
 #result input {
     font-size: 0.9em;
-    width: 32em;
+    width: 33em;
 }
 
 #footer {
@@ -96,4 +99,11 @@ body {
     font-size: 0.75em;
     position: absolute;
     right: 2em;
+}
+
+.addthis_toolbox {
+    position: absolute;
+    bottom: 1em;
+    right: 1em;
+    width: 300px;
 }
