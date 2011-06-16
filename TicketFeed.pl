@@ -74,7 +74,6 @@ any '/feed/:num' => [num => qr/(\d{4}-?){4}/] => sub {
     my $feed = new XML::Feed('RSS', version => '2.0');
     $feed->description('Alimentando o seu leitor de feeds');
     $feed->link($root->to_abs);
-    $feed->modified(DateTime->now);
     $feed->self_link($self->req->url->to_abs);
     $feed->title('TicketFeed');
 
@@ -94,6 +93,7 @@ any '/feed/:num' => [num => qr/(\d{4}-?){4}/] => sub {
     $balance_url =~ s{/feed/}{/balance/};
 
     my $i = 0;
+    my $last_modified = 0;
     for my $item (@{$result->[2]}) {
         $item->{$_} //= '' for qw(data valor descricao);
         if (my ($day, $month, $year) = ($item->{data} =~ m{(\d{1,2})/(\d{1,2})/(\d{4})})) {
@@ -111,6 +111,7 @@ any '/feed/:num' => [num => qr/(\d{4}-?){4}/] => sub {
                 time_zone   => 'America/Sao_Paulo',
             );
             my $id = $date->epoch + $i;
+            $last_modified = $id if $last_modified < $id;
 
             my $content = "<span style='color: $color'>";
             $content    .= $price->format_price($item->{valor}, 2);
@@ -130,6 +131,7 @@ any '/feed/:num' => [num => qr/(\d{4}-?){4}/] => sub {
         ++$i;
     }
 
+    $feed->modified(DateTime->from_epoch(epoch => $last_modified));
     $self->render(text => $feed->as_xml, format => 'rss');
 };
 
