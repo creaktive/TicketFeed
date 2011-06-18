@@ -35,7 +35,7 @@
                         Alimentando o seu leitor de <i>feeds</i>!
                 </div>
 
-                <label for="num">Digite o número do seu Ticket:</label>
+                <label for="num">Digite o número do seu Ticket e pressione <b>ENTER</b> para gerar link para o <i>feed</i>:</label>
                 <br/>
                 <%=
                     text_field
