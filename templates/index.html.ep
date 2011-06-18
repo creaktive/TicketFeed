@@ -35,7 +35,10 @@
                         Alimentando o seu leitor de <i>feeds</i>!
                 </div>
 
-                <label for="num">Digite o número do seu Ticket e pressione <b>ENTER</b> para gerar link para o <i>feed</i>:</label>
+                <label for="num">
+                    Digite o número do seu Ticket e pressione <b>ENTER</b> para gerar link para ser colado no seu leitor de <i>feeds</i>
+                    (<%= link_to 'Google Reader' => 'http://reader.google.com/' %>, por exemplo):
+                </label>
                 <br/>
                 <%=
                     text_field
