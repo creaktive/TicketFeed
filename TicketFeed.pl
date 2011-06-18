@@ -58,6 +58,11 @@ any '/balance/:num' => [num => qr/(\d{4}-?){4}/] => sub {
     $self->render('balance', format => 'svg');
 };
 
+any '/redir/:num/:id' => [num => qr/(\d{4}-?){4}/, id => qr/\d+/] => sub {
+    my ($self) = @_;
+    return $self->redirect_to('http://www.ticket.com.br/portal/portalcorporativo/usuario/vazio/consulte-seu-saldo/consulte-seu-saldo.htm?cardNumber=' . $self->param('num'));
+};
+
 any '/feed/:num' => [num => qr/(\d{4}-?){4}/] => sub {
     my ($self) = @_;
 
@@ -92,14 +97,13 @@ any '/feed/:num' => [num => qr/(\d{4}-?){4}/] => sub {
     my $balance_url = $self->req->url->to_abs;
     $balance_url =~ s{/feed/}{/balance/};
 
-    my $i = 0;
+    my %count;
     my $last_modified = 0;
     for my $item (@{$result->[2]}) {
         $item->{$_} //= '' for qw(data valor descricao);
         if (my ($day, $month, $year) = ($item->{data} =~ m{(\d{1,2})/(\d{1,2})/(\d{4})})) {
             $item->{valor} =~ y/,././d;
             my $color   = ($item->{descricao} =~ /^DISPON\.\s+DE\s+BENEFICIO/i) ? '#080' : '#800';
-            my $link    = 'http://www.ticket.com.br/portal/portalcorporativo/usuario/vazio/consulte-seu-saldo/consulte-seu-saldo.htm?cardNumber=' . $num;
 
             my $date = new DateTime(
                 year        => $year,
@@ -110,7 +114,8 @@ any '/feed/:num' => [num => qr/(\d{4}-?){4}/] => sub {
                 second      => 00,
                 time_zone   => 'America/Sao_Paulo',
             );
-            my $id = $date->epoch + $i;
+            $count{$date->epoch}++;
+            my $id = $date->epoch - ($count{$date->epoch} - 1);
             $last_modified = $id if $last_modified < $id;
 
             my $content = "<span style='color: $color'>";
@@ -119,16 +124,18 @@ any '/feed/:num' => [num => qr/(\d{4}-?){4}/] => sub {
             $content    .= qq{<img src="$balance_url?id=$id" width="300" height="20" border="0" alt="" title=""/>};
 
             my $entry = new XML::Feed::Entry;
+
             $entry->author('noreply@' . $root->to_abs->host . " (TicketFeed #$numstr)");
             $entry->content($content);
-            $entry->link($link . '#' . $id);
+            $entry->id($id);
+            $entry->issued($date);
+            $entry->link($root->to_abs . 'redir/' . $num . '/' . $id);
             $entry->modified($date);
             $entry->summary($content);
             $entry->title($item->{descricao});
+
             $feed->add_entry($entry);
         }
-    } continue {
-        ++$i;
     }
 
     $feed->modified(DateTime->from_epoch(epoch => $last_modified));
