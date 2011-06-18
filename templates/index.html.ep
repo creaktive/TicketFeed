@@ -52,7 +52,7 @@
                 %>
 
                 <% if ($feed) { %>
-                    <iframe id="balance" name="balance" src="<%= "${root}balance/${feed}" %>" width="300" height="20" frameborder="0" marginheight="0" marginwidth="0" scrolling="no" allowtransparency="true"></iframe>
+                <iframe id="balance" name="balance" src="<%= "${root}balance/${feed}/" . time %>" width="300" height="20" frameborder="0" marginheight="0" marginwidth="0" scrolling="no" allowtransparency="true"></iframe>
                     <br/>
                     Adicione ao seu leitor de <i>feeds</i>:
                     <div id="result">

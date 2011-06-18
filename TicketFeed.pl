@@ -32,7 +32,7 @@ any '/' => sub {
     $self->render('index');
 };
 
-any '/balance/:num' => [num => qr/(\d{4}-?){4}/] => sub {
+any '/balance/:num/:id' => [num => qr/(\d{4}-?){4}/, id => qr/\d+/] => sub {
     my ($self) = @_;
 
     my $num = $self->param('num');
@@ -114,14 +114,14 @@ any '/feed/:num' => [num => qr/(\d{4}-?){4}/] => sub {
                 second      => 00,
                 time_zone   => 'America/Sao_Paulo',
             );
-            $count{$date->epoch}++;
-            my $id = $date->epoch - ($count{$date->epoch} - 1);
+            $date->subtract(minutes => $count{$date->epoch}++);
+            my $id = $date->epoch;
             $last_modified = $id if $last_modified < $id;
 
             my $content = "<span style='color: $color'>";
             $content    .= $price->format_price($item->{valor}, 2);
             $content    .= "</span> (" . $item->{data} . ")<br/>";
-            $content    .= qq{<img src="$balance_url?id=$id" width="300" height="20" border="0" alt="" title=""/>};
+            $content    .= qq{<img src="$balance_url/$id" width="300" height="20" border="0" alt="" title=""/>};
 
             my $entry = new XML::Feed::Entry;
 
