@@ -60,13 +60,15 @@ body {
     box-shadow: 0.5em 0.5em 1em #888;
 }
 
-#card legend {
+#card h2 {
     font-size: 3em;
     font-style: italic;
     font-weight: bold;
     position: relative;
-    top: 1em;
+    top: 0px;
     color: #006;
+    margin:0px;
+    padding:0px;
 }
 
 #slogan {
