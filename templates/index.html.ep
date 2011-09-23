@@ -28,8 +28,8 @@
     <body>
         <div id="distance"></div>
         <%= form_for $root => (method => 'post') => begin %>
-            <fieldset id="card">
-                <legend>TicketFeed</legend>
+            <div id="card">
+                <h2>TicketFeed</h2>
 
                 <div id="slogan">
                         Alimentando o seu leitor de <i>feeds</i>!
@@ -69,7 +69,7 @@
                     , o código-fonte encontra-se disponível no
                     <%= link_to GitHub => 'https://github.com/creaktive/TicketFeed' %>
                 </div>
-            </fieldset>
+            </div>
         <% end %>
 
         <!-- AddThis Button BEGIN -->
